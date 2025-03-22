@@ -1,3 +1,6 @@
+#ifndef FUNNEL_HASH_H_
+#define FUNNEL_HASH_H_
+
 #include "murmur_hash_64a.h"
 
 #include <array>
@@ -128,4 +131,7 @@ private:
 private:
 	std::vector<Array> storage_;
 };
+
+#endif
+
 
