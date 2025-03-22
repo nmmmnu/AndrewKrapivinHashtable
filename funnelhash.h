@@ -21,9 +21,9 @@ namespace funnel_hash{
 	}
 } // namespace funnel_hash
 
-template<typename K, typename V, size_t N>
+template<typename K, typename V, size_t N, size_t HF = 3 >
 struct FunnelHash{
-	size_t const TRIES = 3;
+	static_assert(HF >= 3 && HF <16);
 
 	enum class PushResult{
 		ERROR		,
@@ -47,7 +47,7 @@ struct FunnelHash{
 
 			auto &storage = storage_[level];
 
-			for(size_t tries = 0; tries < TRIES; ++tries){
+			for(size_t tries = 0; tries < HF; ++tries){
 				auto const cell = hash__(k, tries);
 
 				if (storage[cell].empty()){
@@ -81,7 +81,7 @@ struct FunnelHash{
 
 			auto &storage = storage_[level];
 
-			for(size_t tries = 0; tries < TRIES; ++tries){
+			for(size_t tries = 0; tries < HF; ++tries){
 				auto const cell = hash__(k, tries);
 
 				if (storage[cell].empty()){
@@ -120,7 +120,7 @@ struct FunnelHash{
 
 			auto &storage = storage_[level];
 
-			for(size_t tries = 0; tries < TRIES; ++tries){
+			for(size_t tries = 0; tries < HF; ++tries){
 				auto const cell = hash__(k, tries);
 
 				if constexpr(Fast){
