@@ -36,7 +36,7 @@ struct FunnelHash{
 	}
 
 	template<typename UV>
-	PushResult push(K const &k, UV &&v){
+	PushResult add(K const &k, UV &&v){
 		size_t level = 0;
 
 		while(true){

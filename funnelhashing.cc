@@ -13,23 +13,23 @@ void fetch(MyFunnelHash const &h, std::string_view k){
 int main(){
 	MyFunnelHash h;
 
-	h.push("Name",		"Peter"		);
-	h.push("Age",		"22"		);
-	h.push("City",		"Sofia"		);
-	h.push("Country",	"BG"		);
-	h.push("Currency",	"BGN"		);
-	h.push("PC",		"Dell"		);
-	h.push("Model",		"XPS"		);
-	h.push("Screen",	"15'"		);
-	h.push("CPU",		"Intel"		);
-	h.push("CPU Model",	"i7-12700H"	);
-	h.push("Cores",		"6"		);
-	h.push("ECores",	"8"		);
-	h.push("Threads",	"20"		);
-	h.push("GPU",		"NVDA"		);
-	h.push("HDD",		"1 TB NVME"	);
-	h.push("Mouse",		"Xiaomy"	);
-	h.push("Mouse",		"Logitech"	);
+	h.add("Name",		"Peter"		);
+	h.add("Age",		"22"		);
+	h.add("City",		"Sofia"		);
+	h.add("Country",	"BG"		);
+	h.add("Currency",	"BGN"		);
+	h.add("PC",		"Dell"		);
+	h.add("Model",		"XPS"		);
+	h.add("Screen",		"15'"		);
+	h.add("CPU",		"Intel"		);
+	h.add("CPU Model",	"i7-12700H"	);
+	h.add("Cores",		"6"		);
+	h.add("ECores",		"8"		);
+	h.add("Threads",	"20"		);
+	h.add("GPU",		"NVDA"		);
+	h.add("HDD",		"1 TB NVME"	);
+	h.add("Mouse",		"Xiaomy"	);
+	h.add("Mouse",		"Logitech"	);
 
 	h.remove("GPU");
 
