@@ -58,7 +58,13 @@ struct FunnelHash{
 	//	return PushResult::ERROR;
 	}
 
-	auto const &operator()(K const &k, V const &defv) const{
+	auto const &operator()(K const &k, V const &def) const{
+		auto *v = operator()(k);
+
+		return v ? *v : def;
+	}
+
+	const V *operator()(K const &k) const{
 	//	std::cout << "Key : " << k << '\n';
 
 		size_t level = 0;
@@ -66,7 +72,7 @@ struct FunnelHash{
 		while(true){
 			if (level == storage_.size()){
 				// no such level
-				return defv;
+				return nullptr;
 			}
 
 			auto &storage = storage_[level];
@@ -78,12 +84,12 @@ struct FunnelHash{
 
 				if (storage[cell].empty()){
 					// not found
-					return defv;
+					return nullptr;
 				}
 
 				if (storage[cell].key == k){
 					// found
-					return storage[cell].val;
+					return & storage[cell].val;
 				}
 			}
 
