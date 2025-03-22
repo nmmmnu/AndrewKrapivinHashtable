@@ -148,11 +148,11 @@ struct FunnelHash{
 		for(auto &a : storage_){
 			std::cout << "Level: {" << '\n';
 			std::cout << '\t';
-			for(auto &[k,v] : a){
-				if (funnel_hash::empty(k))
+			for(auto &p : a){
+				if (p.empty())
 					std::cout << " {}, ";
 				else
-					std::cout << " { " << k << " : " << v << " }, ";
+					std::cout << " { " << p.key << " : " << p.val << " }, ";
 			}
 			std::cout << '\n' << "}" << '\n';
 		}
