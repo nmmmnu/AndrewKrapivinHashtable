@@ -1,11 +1,25 @@
 #ifndef FUNNEL_HASH_H_
 #define FUNNEL_HASH_H_
 
-#include "murmur_hash_64a.h"
-
 #include <array>
 #include <vector>
 #include <iostream>
+
+#include "murmur_hash_64a.h"
+
+// Please provide:
+// - uint64_t funnelHash(K s, uint64_t seed);
+// -  bool funnelHashEmpty(K s)
+
+namespace funnel_hash{
+	uint64_t hash(std::string_view s, uint64_t seed){
+		return murmur_hash64a(s, seed);
+	}
+
+	constexpr bool empty(std::string_view s){
+		return s.empty();
+	}
+} // namespace funnel_hash
 
 template<typename K, typename V, size_t N>
 struct FunnelHash{
@@ -54,19 +68,48 @@ struct FunnelHash{
 
 			++level;
 		}
-
-	//	return PushResult::ERROR;
 	}
 
-	auto const &operator()(K const &k, V const &def) const{
-		auto *v = operator()(k);
+	bool remove(K const &k){
+		size_t level = 0;
+
+		while(true){
+			if (level == storage_.size()){
+				// no such level
+				return false;
+			}
+
+			auto &storage = storage_[level];
+
+			for(size_t tries = 0; tries < TRIES; ++tries){
+				auto const cell = hash__(k, tries);
+
+				if (storage[cell].empty()){
+					// not found
+					return false;
+				}
+
+				if (storage[cell].key == k){
+					storage[cell] = {};
+
+					// found
+					return true;
+				}
+			}
+
+			++level;
+		}
+	}
+
+	template<bool Fast = false>
+	auto const &get(K const &k, V const &def) const{
+		auto *v = get<Fast>(k);
 
 		return v ? *v : def;
 	}
 
-	const V *operator()(K const &k) const{
-	//	std::cout << "Key : " << k << '\n';
-
+	template<bool Fast = false>
+	const V *get(K const &k) const{
 		size_t level = 0;
 
 		while(true){
@@ -80,11 +123,11 @@ struct FunnelHash{
 			for(size_t tries = 0; tries < TRIES; ++tries){
 				auto const cell = hash__(k, tries);
 
-			//	std::cout << "Probing : " << level << " " << cell << " " << storage[cell].key << '\n';
-
-				if (storage[cell].empty()){
-					// not found
-					return nullptr;
+				if constexpr(Fast){
+					if (storage[cell].empty()){
+						// not found
+						return nullptr;
+					}
 				}
 
 				if (storage[cell].key == k){
@@ -95,6 +138,10 @@ struct FunnelHash{
 
 			++level;
 		}
+	}
+
+	size_t levels() const{
+		return storage_.size();
 	}
 
 	void print() const{
@@ -112,14 +159,8 @@ struct FunnelHash{
 	}
 
 private:
-	// fix for non std::string_views
 	static auto hash__(K const &k, size_t seed){
-		return murmur_hash64a(k, seed) % N;
-	}
-
-	// fix for non std::string_views
-	constexpr static bool empty__(K const &k){
-		return k.empty();
+		return funnel_hash::hash(k, seed) % N;
 	}
 
 private:
@@ -128,7 +169,7 @@ private:
 		V val;
 
 		constexpr bool empty() const{
-			return empty__(key);
+			return funnel_hash::empty(key);
 		}
 	};
 

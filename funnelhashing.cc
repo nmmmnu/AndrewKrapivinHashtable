@@ -5,9 +5,9 @@
 using MyFunnelHash = FunnelHash<std::string_view, std::string_view, 8>;
 
 void fetch(MyFunnelHash const &h, std::string_view k){
-	std::cout << "Fetch " << k << " -> " << h(k, "not found") << '\n';
-
-//	h(k, "not found");
+	std::cout << "Fetch " << k << " -> "
+			<< h.get   (k, "--none--") << " "
+			<< h.get<1>(k, "--none--") << '\n';
 }
 
 int main(){
@@ -30,6 +30,8 @@ int main(){
 	h.push("HDD",		"1 TB NVME"	);
 	h.push("Mouse",		"Xiaomy"	);
 	h.push("Mouse",		"Logitech"	);
+
+	h.remove("GPU");
 
 	h.print();
 
