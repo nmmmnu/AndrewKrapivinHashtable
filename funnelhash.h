@@ -84,9 +84,11 @@ struct FunnelHash{
 			for(size_t tries = 0; tries < HF; ++tries){
 				auto const cell = hash__(k, tries);
 
-				if (storage[cell].empty()){
-					// not found
-					return false;
+				if constexpr(false){
+					if (storage[cell].empty()){
+						// not found
+						return false;
+					}
 				}
 
 				if (storage[cell].key == k){
